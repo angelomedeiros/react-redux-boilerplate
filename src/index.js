@@ -1,14 +1,33 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import './index.css';
-import './common/dependecies'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { applyMiddleware, createStore } from 'redux'
+import { Provider } from 'react-redux'
+import promise from 'redux-promise'
+import thunk from 'redux-thunk'
+import multi from 'redux-multi'
 
-serviceWorker.unregister();
+import Routes from './main/routes'
 
-if (module.hot) {
-  module.hot.accept()
-}
+import reducers from './main/reducers'
+
+import * as serviceWorker from './serviceWorker'
+import './common/utils/dependecies'
+
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+const store = applyMiddleware(promise, multi, thunk)(createStore)(reducers, devTools)
+
+ReactDOM.render(
+  <Provider store={store}>
+    <Router>
+      <Routes />
+    </Router>
+  </Provider>,
+  document.getElementById('root'))
+
+serviceWorker.unregister()
+
+// if (module.hot) {
+//   module.hot.accept()
+// }
